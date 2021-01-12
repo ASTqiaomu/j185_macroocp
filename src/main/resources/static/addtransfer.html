@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>创建调拨单</title>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="assets/materialize/css/materialize.min.css" media="screen,projection"/>
+	<!-- Bootstrap Styles-->
+	<link href="assets/css/bootstrap.css" rel="stylesheet"/>
+	<!-- FontAwesome Styles-->
+	<link href="assets/css/font-awesome.css" rel="stylesheet"/>
+	<!-- Morris Chart Styles-->
+	<!-- Custom Styles-->
+	<link href="assets/css/custom-styles.css" rel="stylesheet"/>
+	<link href="assets/css/addtransfer.css" rel="stylesheet">
+
+	<!-- /. WRAPPER  -->
+	<!-- JS Scripts-->
+	<!-- jQuery Js -->
+	<script src="assets/js/jquery-1.10.2.js"></script>
+	<!-- Bootstrap Js -->
+	<script src="assets/js/bootstrap.min.js"></script>
+	<script src="assets/materialize/js/materialize.min.js"></script>
+	<!-- Metis Menu Js -->
+	<script src="assets/js/jquery.metisMenu.js"></script>
+	<!-- Morris Chart Js -->
+	<script src="assets/js/morris/raphael-2.1.0.min.js"></script>
+	<script src="assets/js/morris/morris.js"></script>
+	<script src="assets/js/easypiechart.js"></script>
+	<script src="assets/js/easypiechart-data.js"></script>
+	<script src="assets/js/Lightweight-Chart/jquery.chart.js"></script>
+	<!-- Custom Js -->
+	<script src="assets/js/custom-scripts.js"></script>
+	<script src="assets/js/addtransfer.js"></script>
+</head>
+<body onload="getAgencyName(); getAllWOrganization(); getSystemTime(); makeATsID()">   <!-- 在加载页面时，自动调用函数 -->
+<div id="light-down"></div>   <!-- 让整个页面变暗 -->
+
+<div id="div-pop-product">   <!-- 点击a标签弹出的div 包含所有产品信息 -->
+	<h3 style="text-align: center; display: block; margin-top: 5%">请选择调拨产品</h3>
+	<a id="close-div" style="float: right; margin-right: 3%; margin-top: -5%" onclick="closeDiv()">
+		<i class="fa fa-times fa-2x"></i>
+	</a>
+	<!-- 所有的产品信息列表 -->
+	<table id="tab-pro" style="overflow: hidden;"></table>
+	<input type="button" id="input-tb" value="确定" onclick="closeDiv(); getAllByProductID()">
+</div>
+
+<div id="wrapper">
+	<nav class="navbar navbar-default top-navbar" role="navigation">
+		<div class="navbar-header">
+			<div class="navbar-brand waves-effect waves-dark">
+				<img src="assets/img/logo.png" alt="" style="width: 80px;margin-left: 70px;margin-top: -5px;display: inline;">
+				<div id="sideNav" href=""><i class="material-icons dp48">toc</i></div>
+			</div>
+		</div>
+		<div id="navInfo">OCP全渠道数字平台</div>
+		<ul class="nav navbar-top-links navbar-right">
+			<li><a class="dropdown-button waves-effect waves-dark" href="#" data-activates="dropdown1">
+				<i class="fa fa-user fa-fw"></i> <b id="login-truename" style="color: white;">未登录</b>
+				<i class="material-icons right">arrow_drop_down</i>
+			</a></li>
+		</ul>
+	</nav>
+	<!-- Dropdown Structure -->
+	<ul id="dropdown1" class="dropdown-content">
+		<li><a onclick="logout()"><i class="fa fa-sign-out fa-fw"></i> 退出</a></li>
+	</ul>
+	<!--/. NAV TOP  -->
+	<nav class="navbar-default navbar-side" role="navigation">
+		<div class="sidebar-collapse">
+			<ul class="nav" id="main-menu">
+				<li>
+					<img id="headPic" src="assets/img/headpic.jpg" alt="">
+					<div id="showInfo">
+						<p class="username" id="login_truename">未登录</p>
+						<p class="rName" id="login_rName">未登录</p>
+					</div>
+				</li>
+				<li>
+					<a href="index.html" class="waves-effect waves-dark" ><i class="fa fa-dashboard"></i>首页</a>
+				</li>
+				<li>
+					<a href="#" class="waves-effect waves-dark"><i class="fa fa-sitemap"></i>运营管理<span class="fa arrow"></span></a>
+					<ul class="nav nav-second-level">
+						<li>
+							<a href="Management_OA.html"><i class="fa fa-user" aria-hidden="true"></i>运营账号管理</a>
+						</li>
+						<li>
+							<a href="Management_OR.html"><i class="fa fa-users" aria-hidden="true"></i>运营角色管理</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="#" class="waves-effect waves-dark"><i class="fa fa-file"></i>退货订单管理<span
+							class="fa arrow"></span></a>
+					<ul class="nav nav-second-level">
+						<li>
+							<a href="addReturnOrder.html"><i class="fa fa-plus" aria-hidden="true"></i>退货申请</a>
+						</li>
+						<li>
+							<a href="agencyReturnOrderList.html"><i class="fa fa-bars" aria-hidden="true"></i>查看退货订单</a>
+						</li>
+					</ul>
+				</li>
+				<li class="active">
+					<a href="#" class="waves-effect waves-dark"><i class="fa fa-fw fa-table"></i>库存管理<span class="fa arrow"></span></a>
+					<ul class="nav nav-second-level collapse in" aria-expanded="true">
+						<li>
+							<a href="addtransfer.html" class="active-menu"><i class="fa fa-plus" aria-hidden="true"></i>制定调拨单</a>
+						</li>
+						<li>
+							<a href="transferlist.html"><i class="fa fa-bars" aria-hidden="true"></i>调拨单列表</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="#" class="waves-effect waves-dark"><i class="fa fa-fw fa-gear"></i>系统配置<span class="fa arrow"></span></a>
+					<ul class="nav nav-second-level">
+						<li>
+							<a href="#">日志<span class="fa arrow"></span></a>
+							<ul class="nav nav-third-level">
+								<li><a href="#">修改说明</a></li>
+								<li><a href="#">查看日志</a></li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<!-- /. NAV SIDE  -->
+	<div id="page-wrapper">
+		<div class="header">
+			<h1 class="page-header">创建调拨单</h1>
+			<ol class="breadcrumb">
+				<li>用以创建调拨单，由于时间限制，暂时只支持一个调拨单绑定一个产品，其中调拨单号为最近调拨单号加一</li>
+				<li>如果页面排版不对，请尝试将电脑的页面缩放调整至100%，或将浏览器的缩放减小</li>
+			</ol>
+		</div>
+		<div id="page-inner" style="background-color: white">
+			<!-- 调拨单 -->
+			<div id="transfer">
+				<h3 id="organization" style="text-align: center; display: block;">未登录</h3>
+				<div id="transferinfo-div">   <!-- 列表信息 -->
+					<form id="transferinfo-form" method="post">
+						<div class="div-in-form first-div" style="height: 50px">
+							<span class="transfer-list-span first-list">调拨单号：</span>   <!-- 自动生成 -->
+							<span id="tsID"></span>   <!-- 考虑选取最近一条调拨单信息的 id + 1 -->
+						</div>
+						<div class="div-in-form need-margin" style="height: 50px">
+							<span class="transfer-list-span other-list">调拨类型：</span>
+							<select id="tsType" style="display: inline; width: 120px; height: 27px;" onchange="getStockOrderID(); getType()">
+								<option value="0" disabled selected style="display: none;">请选择</option>
+								<option value="1">工厂调拨</option>
+								<option value="2">普通搬仓</option>
+								<option value="3">电商备货调拨</option>
+							</select>
+						</div>
+						<div class="div-in-form need-margin" style="height: 50px">
+							<span class="transfer-list-span other-list">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;创建人：</span>
+							<span id="creator">未登录</span>   <!-- 与登录 管理员 一致 -->
+						</div>
+						<div class="div-in-form need-margin" style="height: 50px">
+							<span class="transfer-list-span other-list">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;创建日期：</span>
+							<span id="createDate"></span>   <!-- 考虑调用两次，加载页面时调用一次，提交时生成一次 -->
+						</div>
+						<br>
+						<div class="div-in-form first-div" style="height: 50px">
+							<span class="transfer-list-span first-list">调出机构：</span>
+							<!-- 以下拉列表方式选择 -->
+							<select id="calloutOrg" style="display: inline; width: 120px; height: 27px;" onchange="getWNameByWOrganizationOut()"></select>
+						</div>
+						<div class="div-in-form need-margin" style="height: 50px">
+							<span class="transfer-list-span other-list">调出仓库：</span>
+							<!-- 以下拉列表方式选择 -->
+							<select id="calloutwName" style="display: inline; width: 120px; height: 27px;" onchange="getSelectedWName(); getWID('out')">
+								<option value="0" disabled selected style="display: none;">请选择</option>
+							</select>
+						</div>
+						<div class="div-in-form need-margin" style="height: 50px">
+							<span class="transfer-list-span other-list">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;调入机构：</span>
+							<!-- 以下拉列表方式选择 -->
+							<select id="callinOrg" style="display: inline; width: 120px; height: 27px;" onchange="getWNameByWOrganizationIn()"></select>
+						</div>
+						<div class="div-in-form need-margin" style="height: 50px">
+							<span class="transfer-list-span other-list">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;调入仓库：</span>
+							<!-- 以下拉列表方式选择 -->
+							<select id="callinwName" style="display: inline; width: 120px; height: 27px;" onchange="getSelectedWName_in(); getWID('in')">
+								<option value="0" disabled selected style="display: none;">请选择</option>
+							</select>
+						</div>
+						<br>
+						<div class="div-in-form first-div" style="height: 50px">
+							<span class="transfer-list-span first-list">&nbsp;&nbsp;&nbsp;经销商：</span>
+							<!-- 以下拉列表方式选择 -->
+							<select id="agencyName" style="display: inline; width: 120px; height: 27px;" onchange="getDeliverAdByAgencyName()"></select>
+						</div>
+						<div class="div-in-form need-margin" style="height: 50px">
+							<span class="transfer-list-span other-list">发运方式：</span>
+							<select id="type-send" style="display: inline; width: 120px; height: 27px;" onchange="getTransMode()">
+								<option value="0" disabled selected style="display: none;">请选择</option>
+								<option value="1">空运</option>
+								<option value="2">陆运</option>
+								<option value="3">海运</option>
+							</select>
+						</div>
+						<div class="div-in-form need-margin" id="stockOrderID-div" style="height: 50px; display: none;">   <!-- 备货计划订单 默认不显示 -->
+							<span class="transfer-list-span other-list">备货订单编号：</span>
+							<select  id="stockOrderID" style="display: inline; width: 120px; height: 27px;" onchange="getAllByStockOrderID()">
+								<option value="0" disabled selected style="display: none;">请选择</option>
+							</select>
+						</div>
+						<br>
+						<div class="div-in-form first-div" style="height: 50px">
+							<span class="transfer-list-span first-list">送货地址：</span>
+							<!-- 以下拉列表方式选择 -->
+							<select id="deliverAd" style="display: inline; width: 120px; height: 27px;" onchange="getAllByDeliverAd(); getAgencyID()">
+								<option value="0" disabled selected style="display: none;">请选择</option>
+							</select>
+						</div>
+						<div class="div-in-form need-margin" style="height: 50px">
+							<span class="transfer-list-span other-list">&nbsp;&nbsp;&nbsp;收货人：</span>
+							<span id="consignee"></span>
+						</div>
+						<div class="div-in-form need-margin" style="height: 50px">
+							<span class="transfer-list-span other-list">&nbsp;&nbsp;&nbsp;收货人电话：</span>
+							<span id="consigneeTel"></span>
+						</div>
+						<div class="div-in-form need-margin" style="height: 50px">
+							<span class="transfer-list-span other-list">收货人身份证：</span>
+							<span id="consigneeID"></span>
+						</div>
+						<br>
+						<div class="div-in-form first-div">
+							<span class="transfer-list-span first-list">调拨总量：</span>   <!-- 默认只读，选择产品后可修改 -->
+							<input id="tsVolumeDose" type="number" class="input" placeholder="请选择产品" readonly="readonly" onchange="updateTsQuantity()" style="width: 120px; height: 20px; font-size: 12px">
+						</div>
+						<div class="div-in-form need-margin">
+							<span class="transfer-list-span other-list">&nbsp;&nbsp;&nbsp;总体积：</span>
+							<span id="tsTotalVolume"></span>
+						</div>
+						<div class="div-in-form need-margin">
+							<span class="transfer-list-span other-list">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;发往城市：</span>
+							<span id="city"></span>
+						</div>
+						<div class="div-in-form need-margin">
+							<span class="transfer-list-span other-list">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;备注：</span>
+							<input id="remark" type="text" class="input" placeholder="请输入" style="width: 120px; height: 20px; font-size: 12px"/>
+						</div>
+
+						<div id="partingLine">   <!-- 分割线 -->
+							<a id="guideInto-a" onclick="canAddProductInfo()"><i class="fa fa-folder-open-o fa-lg"></i>&nbsp;&nbsp;导入</a>
+						</div>
+
+						<!-- 调拨单 产品信息列表 仅支持一个产品信息 -->
+						<table id="tab-on-html">
+							<tr style="background-color: #f2f2f2">
+								<th>序号</th>
+								<th>发出库位编号</th>
+								<th>发出库位名称</th>
+								<th>接收库位编号</th>
+								<th>接收库位名称</th>
+								<th>产品编号</th>
+								<th>产品名称</th>
+								<th>可发货库存</th>
+								<th>调入仓库库存</th>
+								<th>调拨数量</th>
+								<th>审核数量</th>
+								<th>实际发货数量</th>
+								<th>已签收数量</th>
+								<th>单位</th>
+								<th>单位体积</th>
+								<th>操作</th>
+							</tr>
+							<tr>
+								<td id="serialNum">1</td>
+								<td id="calloutwID-td"></td>
+								<td id="calloutwName-td"></td>
+								<td id="callinwID-td"></td>
+								<td id="callinwName-td"></td>
+								<td id="productID"></td>
+								<td id="productName"></td>
+								<td id="repertory"></td>
+								<td id="repertory-td"></td>
+								<td id="tsQuantity"></td>
+								<td id="checkQuantity"></td>
+								<td id="actualShipments"></td>
+								<td id="signedQuantity"></td>
+								<td id="unit"></td>
+								<td id="unitVolume"></td>
+								<td id="operation" style="color: red;" onclick="deleteProduct()"><i class="fa fa-times-circle fa-lg"></i></td>
+							</tr>
+						</table>
+
+						<!-- 两个按钮 -->
+						<input type="button" id="confirm-btn" value="生成调拨单" onclick="submitTransfer()">
+						<input type="reset" id="reset-btn" value="重置">
+					</form>
+				</div>
+			</div>
+
+			<footer><p style="text-align: center; margin-top: 5%;">Copyright &copy; 2021. 代码敲不队 All rights reserved.</p></footer>
+		</div>
+		<!-- /. PAGE INNER  -->
+	</div>
+	<!-- /. PAGE WRAPPER  -->
+</div>
+</body>
+</html>

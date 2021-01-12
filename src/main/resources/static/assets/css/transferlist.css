@@ -1,0 +1,26 @@
+.transfer-list{
+    width: 100%;
+}
+
+.transfer-list-form{
+
+}
+
+/*输入*/
+.transfer-list-input{
+    width: 30%;
+    display: inline-block;
+    float: left;
+    margin-bottom: 20px;
+}
+
+/*导出*/
+.transfer-list-derived{
+
+}
+
+/*展示*/
+.transfer-list-show{
+    width: 100%;
+    margin-top: 20px;
+}

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0 /EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="demo.macroocp.dao.OrderPojoDao">
+    <!--查询某一个经销商的所有订单(已发货/未确认收货)-->
+    <select id="getOrderPojoByAgencyName" resultMap="orderPojoMap" parameterType="String">
+        select *
+        from OrderInfoT t1 JOIN OrderDetailT t2 USING (orderNumber) JOIN OrderShippingT t3 USING (orderNumber)
+        where agencyName=#{agencyName} and orderStatus in (1,2)
+    </select>
+    <resultMap id="orderPojoMap" type="demo.macroocp.bean.OrderPojo">
+        <id column="orderNumber" property="orderNumber"></id>
+        <result column="orderStatus" property="orderStatus"></result>
+        <result column="sourceNumber" property="sourceNumber"></result>
+        <result column="agencyName" property="agencyName"></result>
+        <result column="memberName" property="memberName"></result>
+        <result column="orderDate" property="orderDate"></result>
+        <result column="buyerNickname" property="buyerNickname"></result>
+        <result column="expressCompany" property="expressCompany"></result>
+        <result column="expressNumber" property="expressNumber"></result>
+        <result column="deliveringWarehouse" property="deliveringWarehouse"></result>
+        <association property="orderShipping" javaType="demo.macroocp.bean.OrderShipping">
+            <result column="receiverProvince" property="receiverProvince"></result>
+            <result column="receiverCity" property="receiverCity"></result>
+            <result column="receiverArea" property="receiverArea"></result>
+            <result column="receiverStreet" property="receiverStreet"></result>
+            <result column="receiveZip" property="receiveZip"></result>
+            <result column="receiverName" property="receiverName"></result>
+            <result column="receiverMobile" property="receiverMobile"></result>
+        </association>
+        <collection property="orderItems" ofType="demo.macroocp.bean.OrderItem">
+            <result column="productNumber" property="productNumber"></result>
+            <result column="productName" property="productName"></result>
+            <result column="purchaseQuantity" property="purchaseQuantity"></result>
+            <result column="productPrice" property="productPrice"></result>
+        </collection>
+    </resultMap>
+    <!--多条件查询，(经销商名称)、商品编号、名称、买家昵称-->
+    <select id="getOrderPojoByMultipleCondition" resultMap="orderPojoMap" parameterType="map">
+        select *
+        from OrderInfoT t1 JOIN OrderDetailT t2 USING (orderNumber) JOIN OrderShippingT t3 USING (orderNumber)
+        <where>
+            orderStatus in (1,2)
+            <if test="agencyName != null and agencyName != ''">
+                and agencyName=#{agencyName}
+            </if>
+            <if test="productNumber != null and productNumber != ''">
+                and productNumber like concat('%',#{productNumber},'%')
+            </if>
+            <if test="productName != null and productName != ''">
+                and productName like concat('%',#{productName},'%')
+            </if>
+            <if test="buyerNickname != null and buyerNickname != ''">
+                and buyerNickname like concat('%',#{buyerNickname},'%')
+            </if>
+        </where>
+    </select>
+</mapper>

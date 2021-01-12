@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>调拨单列表</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="assets/materialize/css/materialize.min.css" media="screen,projection"/>
+    <!-- Bootstrap Styles-->
+    <link href="assets/css/bootstrap.css" rel="stylesheet"/>
+    <!-- FontAwesome Styles-->
+    <link href="assets/css/font-awesome.css" rel="stylesheet"/>
+    <!-- Morris Chart Styles-->
+    <!-- Custom Styles-->
+    <link href="assets/css/custom-styles.css" rel="stylesheet"/>
+    <!-- Google Fonts-->
+
+    <!-- /. WRAPPER  -->
+    <!-- JS Scripts-->
+    <!-- jQuery Js -->
+    <script src="assets/js/jquery-1.10.2.js"></script>
+    <!-- Bootstrap Js -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/materialize/js/materialize.min.js"></script>
+    <!-- Metis Menu Js -->
+    <script src="assets/js/jquery.metisMenu.js"></script>
+    <!-- Morris Chart Js -->
+    <script src="assets/js/morris/raphael-2.1.0.min.js"></script>
+    <script src="assets/js/morris/morris.js"></script>
+    <script src="assets/js/easypiechart.js"></script>
+    <script src="assets/js/easypiechart-data.js"></script>
+    <script src="assets/js/Lightweight-Chart/jquery.chart.js"></script>
+    <!-- Custom Js -->
+    <script src="assets/js/custom-scripts.js"></script>
+    <script src="assets/js/transferlist.js"></script>
+    <script src="assets/js/myindex.js"></script>
+
+    <script src="assets/js/dataTables/dataTables.bootstrap.js"></script>
+    <script src="assets/js/dataTables/jquery.dataTables.js"></script>
+    <!--导出为excel插件-->
+    <script src="assets/js/jquery.table2excel.js"></script>
+    <script src="assets/js/jquery.table2excel.min.js"></script>
+</head>
+
+<body onload="selectTransferOrderList()">
+<!--调拨单详情页-->
+<div id="transfer_details" class="background"
+     style="height: 50%; width: 80%; margin: 8% 10%; position: fixed; display: none; z-index: 10">
+    <div class="card"
+         style="position: relative; height: 500px; width: 100%; box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);">
+        <div class="navbar navbar-default" style="height: 50px;">
+            <nav class="nav navbar" style="height: 50px;width: 100%; background: #f94a2e; line-height: 50px">
+                <span class="" style="margin-left: 5px;font-size: 20px; float: left;">调拨单详情 |</span>
+                <div id="button_details" class="btn btn-flat active" style="width: 110px; margin-left: 10px;"
+                     onclick="display_Show_details()">
+                    <a href="javascript:void(0)" target="_self" style="text-decoration: none"><i
+                            class="glyphicon glyphicon-list"></i>订单信息</a>
+                </div>
+                <div id="button_product" class="btn btn-flat active" style="width: 150px;"
+                     onclick="display_Show_Product()">
+                    <a href="javascript:void(0)" target="_self" style="text-decoration: none"><i
+                            class="glyphicon glyphicon-list"></i>订单产品列表</a>
+                </div>
+                <span id="close_list" style="float: right; margin-right: 8px;" onclick="display()">
+                                <i class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i></span>
+            </nav>
+        </div>
+        <div id="transferlist_page_details" style="height: 430px; width: 100%; position: absolute; display: none">
+            <div class="pager" style="height: 100%; width: 100%;">
+                <div class="" style="height: 96%; width: 96%; margin-left: 2%">
+                    <table class="table table-striped table-bordered table-hover dataTable no-footer"
+                           aria-describedby="dataTables-example_info">
+                        <tr role="row">
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 20%; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                                调拨单生成日期
+                            </th>
+                            <td id="td_01" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 30%; background: white"></td>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 20%; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                                调拨单号
+                            </th>
+                            <td id="td_02" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 30%; background: white"></td>
+                        </tr>
+                        <tr role="row">
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                                调出机构名称
+                            </th>
+                            <td id="td_11" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; background: white"></td>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                                调入机构名称
+                            </th>
+                            <td id="td_12" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; background: white"></td>
+                        </tr>
+                        <tr role="row">
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                                调出仓库编码
+                            </th>
+                            <td id="td_21" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; background: white"></td>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                                调入仓库编码
+                            </th>
+                            <td id="td_22" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; background: white"></td>
+                        </tr>
+                        <tr role="row">
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                                调出仓库名称
+                            </th>
+                            <td id="td_31" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; background: white"></td>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                                调入仓库名称
+                            </th>
+                            <td id="td_32" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; background: white"></td>
+                        </tr>
+                        <tr role="row">
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">创建人
+                            </th>
+                            <td id="td_41" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; background: white"></td>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                                发运方式
+                            </th>
+                            <td id="td_42" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; background: white"></td>
+                        </tr>
+                        <tr role="row">
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                                经销商编码
+                            </th>
+                            <td id="td_51" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; background: white"></td>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                                经销商名称
+                            </th>
+                            <td id="td_52" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; background: white"></td>
+                        </tr>
+                        <tr role="row">
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">收货人
+                            </th>
+                            <td id="td_61" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; background: white"></td>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                                收货人电话
+                            </th>
+                            <td id="td_62" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; background: white"></td>
+                        </tr>
+                        <tr role="row">
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                                收货地址
+                            </th>
+                            <td id="td_71" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; background: white"></td>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                                收货人身份证
+                            </th>
+                            <td id="td_72" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; background: white"></td>
+                        </tr>
+                        <tr role="row">
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                                调拨总数量
+                            </th>
+                            <td id="td_81" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; background: white"></td>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                                调拨总体积
+                            </th>
+                            <td id="td_82" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; background: white"></td>
+                        </tr>
+                        <tr role="row">
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">备注
+                            </th>
+                            <td id="td_91" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; background: white"></td>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                                产品组织
+                            </th>
+                            <td id="td_92" tabindex="0" rowspan="1" colspan="1"
+                                style="width: 100px; background: white"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="transferlist_page_product" style="height: 430px; width: 100%; position: absolute; display: none">
+            <div class="pager" style="height: 100%; width: 100%;">
+                <div class="" style="height: 96%; width: 96%; margin-left: 2%">
+                    <table class="table table-striped table-bordered table-hover dataTable no-footer"
+                           style="font-size: 12px">
+                        <thead>
+                        <tr role="row" style="background: #f9f9f9;">
+                            <th class="sorting_desc" tabindex="0" rowspan="1" colspan="1" style="width: 50px; ">序号</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 140px; ">备货计划订单编号
+                            </th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 110px; ">发出库位编码</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 120px; ">发出库位名称</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 100px; ">接收库位编码</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 120px; ">接收库位名称</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 100px; ">产品编码</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 80px; ">产品名称</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 90px; ">可发货库存</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 100px; ">调入仓库库存</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 80px; ">调拨数量</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 80px; ">审核数量</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 110px; ">实际发货数量</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 90px; ">已签收数量</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 50px; ">单位</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 80px; ">单位体积</th>
+                        </tr>
+                        </thead>
+                        <tbody class="DTFC_LeftBodyWrapper" id="transferlist_product"></tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="wrapper">
+    <nav class="navbar navbar-default top-navbar" role="navigation">
+        <div class="navbar-header">
+            <div class="navbar-brand waves-effect waves-dark">
+                <img src="assets/img/logo.png" alt="" style="width: 80px;margin-left: 70px;margin-top: -5px;display: inline;">
+                <div id="sideNav" href=""><i class="material-icons dp48">toc</i></div>
+            </div>
+        </div>
+        <div id="navInfo">OCP全渠道数字平台</div>
+        <ul class="nav navbar-top-links navbar-right">
+            <li><a class="dropdown-button waves-effect waves-dark" href="#" data-activates="dropdown1">
+                <i class="fa fa-user fa-fw"></i> <b id="login-truename" style="color: white;">未登录</b>
+                <i class="material-icons right">arrow_drop_down</i>
+            </a></li>
+        </ul>
+    </nav>
+    <!-- Dropdown Structure -->
+    <ul id="dropdown1" class="dropdown-content">
+        <li><a onclick="logout()"><i class="fa fa-sign-out fa-fw"></i> 退出</a></li>
+    </ul>
+    <!--/. NAV TOP  -->
+    <nav class="navbar-default navbar-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="main-menu">
+                <li>
+                    <img id="headPic" src="assets/img/headpic.jpg" alt="">
+                    <div id="showInfo">
+                        <p class="username" id="login_truename">未登录</p>
+                        <p class="rName" id="login_rName">未登录</p>
+                    </div>
+                </li>
+                <li>
+                    <a href="index.html" class="waves-effect waves-dark" ><i class="fa fa-dashboard"></i>首页</a>
+                </li>
+                <li>
+                    <a href="#" class="waves-effect waves-dark"><i class="fa fa-sitemap"></i>运营管理<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="Management_OA.html"><i class="fa fa-user" aria-hidden="true"></i>运营账号管理</a>
+                        </li>
+                        <li>
+                            <a href="Management_OR.html"><i class="fa fa-users" aria-hidden="true"></i>运营角色管理</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="waves-effect waves-dark"><i class="fa fa-file"></i>退货订单管理<span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="addReturnOrder.html"><i class="fa fa-plus" aria-hidden="true"></i>退货申请</a>
+                        </li>
+                        <li>
+                            <a href="agencyReturnOrderList.html"><i class="fa fa-bars" aria-hidden="true"></i>查看退货订单</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="active">
+                    <a href="#" class="waves-effect waves-dark"><i class="fa fa-fw fa-table"></i>库存管理<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse in" aria-expanded="true">
+                        <li>
+                            <a href="addtransfer.html"><i class="fa fa-plus" aria-hidden="true"></i>制定调拨单</a>
+                        </li>
+                        <li>
+                            <a href="transferlist.html" class="active-menu"><i class="fa fa-bars" aria-hidden="true"></i>调拨单列表</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="waves-effect waves-dark"><i class="fa fa-fw fa-gear"></i>系统配置<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="#">日志<span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                                <li><a href="#">修改说明</a></li>
+                                <li><a href="#">查看日志</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- /. NAV SIDE  -->
+    <div id="page-wrapper" style="position:relative;">
+        <div class="header">
+            <h1 class="page-header">调拨单列表</h1>
+            <ol class="breadcrumb">
+                <li><a href="#">调拨单列表</a></li>
+                <li><a href="#">导出Excel</a></li>
+                <li><a href="#">查询选项</a></li>
+                <li><a href="#">详情页</a></li>
+
+            </ol>
+        </div>
+        <div id="page-inner" style="margin: 0">
+            <!--调拨单列表-->
+            <div class="transfer-list col-md-12 card" style="height: 100%; width: 100%; " onchange="">
+                <div class="transfer-list-form" method="post" action="transferlist.html">
+                    <div class="transfer-list" style="height: 30px; width: 100%; margin-top: 40px">
+                        <div class="transfer-list-input"
+                             style="width: 33%; height: 30px; float: left; margin-bottom: 20px;">
+                            <label style="margin-left: 40px">调拨单号：<input id="ts_ID" type="text" class="input"
+                                                                         placeholder="请输入"
+                                                                         style=" width: 200px; height: 20px; font-size: 12px"/></label>
+                        </div>
+                        <div class="transfer-list-input"
+                             style="width: 33%; height: 30px; float: left; margin-bottom: 20px;">
+                            <label style="margin-left: 0px">调拨日期：<input id="start_Date" type="date" class="input"
+                                                                        style=" width: 120px; height: 20px; font-size: 12px"/>
+                                至 <input id="end_Date" type="date" class="input"
+                                         style=" width: 120px; height: 20px; font-size: 12px"/></label>
+                        </div>
+                        <div class="transfer-list-input"
+                             style="width: 33%; height: 20px; float: left; margin-bottom: 20px;">
+                            <div style="float: left;margin-left: 12px">
+                                <label style="margin-top: 7px">创建人：</label>
+                            </div>
+                            <div style="float: left; margin-top: 2px">
+                                <select id="true_Name" name="dataTables-example_length" class="form-control input-sm"
+                                        style="height: 27px; width: 210px">
+                                    <option value="0">请选择</option>
+                                    <option value="李四">李四</option>
+                                    <option value="王洪生">王洪生</option>
+                                    <option value="一行琉璃">一行琉璃</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="transfer-list" style="height: 30px; width: 100%;margin-top: 20px;">
+                        <div class="transfer-list-input"
+                             style="width: 33%; height: 30px; float: left; margin-bottom: 20px; ">
+                            <label style="margin-left: 40px">产品编码：<input id="product_ID" type="text" class="input"
+                                                                         placeholder="请输入"
+                                                                         style=" width: 200px; height: 20px; font-size: 12px"/></label>
+                        </div>
+                        <div class="transfer-list-input"
+                             style="width: 33%; height: 20px; float: left; margin-bottom: 20px;">
+                            <div style="float: left;">
+                                <label style="margin-top: 7px">调出仓库：</label>
+                            </div>
+                            <div style="float: left; margin-top: 2px">
+                                <select id="wName_out" name="dataTables-example_length" class="form-control input-sm"
+                                        style="height: 27px; width: 210px">
+                                    <option value="0">请选择</option>
+                                    <option value="成都终端仓">成都终端仓</option>
+                                    <option value="成都双流展柜仓">成都双流展柜仓</option>
+                                    <option value="北京终端仓">北京终端仓</option>
+                                    <option value="南京终端仓">南京终端仓</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="transfer-list-input"
+                             style="width: 33%; height: 20px; float: left; margin-bottom: 20px;">
+                            <div style="float: left;">
+                                <label style="margin-top: 7px">调入仓库：</label>
+                            </div>
+                            <div style="float: left; margin-top: 2px">
+                                <select id="wName_in" name="dataTables-example_length" class="form-control input-sm"
+                                        style="height: 27px; width: 210px">
+                                    <option value="0">请选择</option>
+                                    <option value="成都终端仓">成都终端仓</option>
+                                    <option value="成都双流展柜仓">成都双流展柜仓</option>
+                                    <option value="北京终端仓">北京终端仓</option>
+                                    <option value="南京终端仓">南京终端仓</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="transfer-list" style="height: 30px; width: 100%; margin-top: 20px">
+                        <div class="transfer-list-input"
+                             style="width: 33%; height: 30px; float: left; margin-bottom: 20px;">
+                            <label style="margin-left: 40px">产品名称：<input id="product_Name" type="text" class="input"
+                                                                         placeholder="请输入"
+                                                                         style=" width: 200px; height: 20px; font-size: 12px"/></label>
+                        </div>
+                        <div class="transfer-list-input"
+                             style="width: 33%; height: 30px; float: left; margin-bottom: 20px;">
+                            <label style="margin-left: 24px">品类：<input id="_type" type="text" class="input"
+                                                                       placeholder="请输入"
+                                                                       style=" width: 200px; height: 20px; font-size: 12px"/></label>
+                        </div>
+                        <div class="transfer-list-input"
+                             style="width: 33%; height: 20px; float: left; margin-bottom: 20px;">
+                            <div style="float: left;">
+                                <label style="margin-top: 7px">调拨类型：</label>
+                            </div>
+                            <div style="float: left; margin-top: 2px">
+                                <select id="ts_Type" name="dataTables-example_length" class="form-control input-sm"
+                                        style="height: 27px; width: 210px">
+                                    <option value="0">请选择</option>
+                                    <option value="工厂调拨">工厂调拨</option>
+                                    <option value="普通搬仓">普通搬仓</option>
+                                    <option value="电商备货调拨">电商备货调拨</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="transfer-list" style="height: 30px; width: 100%; margin-top: 40px">
+                        <div class="transfer-list"
+                             style="height: 30px; width: 120px; text-align: center; float: right; margin-right: 120px">
+                            <div id="transfer_submit" type="button" class="btn-warning btn" style="width: 100px;"
+                                 onclick="select_Dynamic()"><i class="glyphicon glyphicon-search"></i> 查询
+                            </div>
+                        </div>
+                        <div class="transfer-list"
+                             style="height: 30px; width: 120px; text-align: right; float: right; margin-right: 60px">
+                            <div id="generate-excel" type="button" class="btn-success btn" style="width: 100px;"
+                                 onclick="exportExcel()"><i class="glyphicon glyphicon-export"></i>导出
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+                <div class="transfer-list">
+                    <table class="table table-striped table-bordered table-hover dataTable no-footer"
+                           id="dataTables-example" aria-describedby="dataTables-example_info">
+                        <thead>
+                        <tr role="row">
+                            <th class="sorting_desc" tabindex="0" rowspan="1" colspan="1" style="width: 60px;">序号</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 100px;">调拨单号</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 100px;">创建日期</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 100px;">调拨类型</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 150px;">调出仓库编号</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 150px;">调出仓库名称</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 150px;">调入仓库编号</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 150px;">调入仓库名称</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 100px;">产品编码</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 100px;">产品名称</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 100px;">品类</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 100px;">调拨数量</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 60px;">单位</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 60px;">体积</th>
+                            <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 80px;">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="DTFC_LeftBodyWrapper" id="transferlistshow">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="dataTables_paginate paging_simple_numbers" id="dataTables-example_paginate"
+                     style="float: right; margin-right: 50px">
+                    <ul class="pagination">
+                        <li class="paginate_button previous disabled" aria-controls="dataTables-example" tabindex="0"
+                            id="dataTables-example_previous">
+                            <a href="#">Previous</a>
+                        </li>
+                        <li class="paginate_button active" aria-controls="dataTables-example" tabindex="0">
+                            <a href="#">1</a>
+                        </li>
+                        <li class="paginate_button disabled" aria-controls="dataTables-example" tabindex="0"
+                            id="dataTables-example_next">
+                            <a href="#">Next</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <footer><p>Copyright &copy; 2021. 代码敲不队 All rights reserved.</p></footer>
+        <!-- /. PAGE INNER  -->
+    </div>
+    <!-- /. PAGE WRAPPER  -->
+</div>
+</body>
+</html>

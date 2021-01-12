@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0 /EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="demo.macroocp.dao.ReturnOrderAuditDao">
+    <insert id="addReturnOrderAudit" parameterType="demo.macroocp.bean.ReturnOrderAudit">
+        insert into returnorderauditt
+        values (#{returnOrderNumber},#{auditorName},#{settlementAuditName},#{auditDate},#{settlementAuditDate},#{rejectedReason});
+    </insert>
+    <update id="updateReturnOrderAudit" parameterType="demo.macroocp.bean.ReturnOrderAudit">
+        update returnorderauditt
+        <set>
+            <if test="auditorName != null and auditorName != ''">
+                auditorName=#{auditorName},
+            </if>
+            <if test="settlementAuditName != null and settlementAuditName != ''">
+                settlementAuditName=#{settlementAuditName},
+            </if>
+            <if test="auditDate != null">
+                auditDate=#{auditDate},
+            </if>
+            <if test="settlementAuditDate != null">
+                settlementAuditDate=#{settlementAuditDate},
+            </if>
+            <if test="rejectedReason != null and rejectedReason != ''">
+                rejectedReason=#{rejectedReason},
+            </if>
+        </set>
+        where returnOrderNumber=#{returnOrderNumber}
+    </update>
+</mapper>

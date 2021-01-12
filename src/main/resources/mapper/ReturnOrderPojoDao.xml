@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0 /EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="demo.macroocp.dao.ReturnOrderPojoDao">
+    <!--经销商获取自己的退货订单-->
+    <select id="getAllReturnedOrderInfo" resultType="demo.macroocp.bean.ReturnOrderPojo" resultMap="returnOrderPojoMap"
+            parameterType="String">
+        select *
+        from returnorderinfot t1 JOIN returnorderdetailt t2 USING (returnOrderNumber) JOIN returnorderauditt t3 USING
+        (returnOrderNumber)
+        <where>
+            <if test="agencyName != null and agencyName != ''">
+                and agencyName=#{agencyName}
+            </if>
+        </where>
+    </select>
+    <select id="getReturnedOrderPojoByMultipleCondition" parameterType="demo.macroocp.bean.ReturnOrderInfo"
+            resultType="demo.macroocp.bean.ReturnOrderPojo" resultMap="returnOrderPojoMap">
+        select *
+        from returnorderinfot t1 JOIN returnorderdetailt t2 USING (returnOrderNumber) JOIN returnorderauditt t3 USING
+        (returnOrderNumber)
+        <where>
+            <if test="agencyName != null and agencyName != ''">
+                and agencyName like concat('%',#{agencyName},'%')
+            </if>
+            <if test="returnOrderNumber != null and returnOrderNumber != ''">
+                and returnOrderNumber like concat('%',#{returnOrderNumber},'%')
+            </if>
+            <if test="returnOrderDate != null and returnOrderDate != ''">
+                and convert(orderDate,DATETIME) like concat(#{returnOrderDate},'%')
+            </if>
+            <if test="saleOrderNumber != null and saleOrderNumber != ''">
+                and saleOrderNumber like concat('%',#{saleOrderNumber},'%')
+            </if>
+            <if test="returnOrderStatu != null and returnOrderStatu != ''">
+                and returnOrderStatu=#{returnOrderStatu}
+            </if>
+            <if test="returnReason != null and returnReason != ''">
+                and returnReason like concat('%',#{returnReason},'%')
+            </if>
+            <if test="expressCompany != null and expressCompany != ''">
+                and expressCompany like concat('%',#{expressCompany},'%')
+            </if>
+            <if test="expressNumber != null and expressNumber != ''">
+                and expressNumber like concat('%',#{expressNumber},'%')
+            </if>
+            <if test="oWarehouseName != null and oWarehouseName != ''">
+                and oWarehouseName like concat('%',#{oWarehouseName},'%')
+            </if>
+            <if test="returnedWarehouseName != null and returnedWarehouseName != ''">
+                and returnedWarehouseName like concat('%',#{returnedWarehouseName},'%')
+            </if>
+            <if test="memberName != null and memberName != ''">
+                and memberName like concat('%',#{memberName},'%')
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="returnOrderPojoMap" type="demo.macroocp.bean.ReturnOrderPojo">
+        <id column="returnOrderNumber" property="returnOrderNumber"></id>
+        <result column="returnOrderDate" property="returnOrderDate"></result>
+        <result column="saleOrderNumber" property="saleOrderNumber"></result>
+        <result column="returnOrderStatu" property="returnOrderStatu"></result>
+        <result column="returnType" property="returnType"></result>
+        <result column="returnReason" property="returnReason"></result>
+        <result column="expressCompany" property="expressCompany"></result>
+        <result column="expressNumber" property="expressNumber"></result>
+        <result column="customerRemark" property="customerRemark"></result>
+        <result column="oWarehouseName" property="oWarehouseName"></result>
+        <result column="returnedWarehouseName" property="returnedWarehouseName"></result>
+        <result column="agencyName" property="agencyName"></result>
+        <result column="memberName" property="memberName"></result>
+        <result column="returnedPayment" property="returnedPayment"></result>
+        <association property="returnOrderAudit" javaType="demo.macroocp.bean.ReturnOrderAudit">
+            <result column="auditorName" property="auditorName"></result>
+            <result column="settlementAuditName" property="settlementAuditName"></result>
+            <result column="auditDate" property="auditDate"></result>
+            <result column="settlementAuditDate" property="settlementAuditDate"></result>
+            <result column="rejectedReason" property="rejectedReason"></result>
+        </association>
+        <collection property="returnOrderItems" ofType="demo.macroocp.bean.ReturnOrderItem">
+            <result column="returnProductNumber" property="returnProductNumber"></result>
+            <result column="returnProductName" property="returnProductName"></result>
+            <result column="returnProductAmount" property="returnProductAmount"></result>
+            <result column="refundAmount" property="refundAmount"></result>
+        </collection>
+    </resultMap>
+</mapper>

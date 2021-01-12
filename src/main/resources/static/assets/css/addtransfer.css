@@ -1,0 +1,149 @@
+/* 创建调拨单CSS */
+#transferinfo-div {
+    margin-top: 50px;
+    margin-left: 3%;
+    font-size: 12px;
+}
+
+.div-in-form {
+    display: inline-block;
+    width: 250px;   /*250px;*/
+    /*margin-left: 6%;*/
+}
+
+.first-div {
+    margin-left: 13%;
+}
+
+table, table tr th, table tr td {
+    border:1px solid black;
+}
+
+table {
+    width: 97%;
+    min-height: 25px;
+    line-height: 25px;
+    text-align: center;
+    border-collapse: collapse;
+    /*margin-top: 30px;*/
+}
+
+th, tr, td {
+    text-align: center;
+}
+
+#partingLine {
+    height: 50px;
+    width: 101%;
+    display: block;
+    background-color: #f2f2f2;
+    margin-left: -30px;
+    margin-top: 30px;
+}
+
+#guideInto-a {
+    width: 130px;
+    height: 30px;
+    margin-left: 30px;
+    position: relative;
+    top: 23%;
+    background-color: #d6d6d6;
+    text-align: center;
+    line-height: 30px;
+    display: block;
+    color: black;
+    z-index: 10;
+}
+
+#guideInto-a:hover {
+    background-color: #e4faff;
+    text-decoration: none;
+}
+
+#light-down {
+    all: unset;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    background-color: rgba(169,169,169,0.6);
+    position: absolute;
+    z-index: 15;
+}
+
+/* 点击a标签弹出的div 包含所有产品信息 CSS */
+#div-pop-product {
+    all: unset;
+    margin: 0;
+    padding: 0;
+    left: 30%;
+    top: 18%;
+    display: none;
+    position: absolute;
+    width: 800px;
+    height: 550px;
+    border: 2px solid #a9a9a9;
+    background-color: white;
+    z-index: 20;
+}
+
+#close-div {
+    color: black;
+}
+
+#tab-pro {
+    margin-top: 5%;
+    margin-left: 5%;
+    width: 90%;
+}
+
+#input-tb {
+    border: none;
+    outline: none;
+    border-radius: 8px;
+
+    /*position: absolute;*/
+    float: bottom;
+    margin-top: 25%;
+    margin-left: 46%;
+
+    font-size: 16px;
+    background-color: #f94a2e;
+    color: white;
+    width: 10%;
+    height: 7%;
+}
+
+#input-tb:hover {
+    background-color: #f98a00;
+}
+
+#confirm-btn {
+    border: none;
+    outline: none;
+    margin-top: 3%;
+    margin-left: 34.2%;
+    width: 200px;
+    height: 50px;
+    background-color: #f94a2e;
+    color: white;
+    font-size: 20px;
+}
+
+#confirm-btn:hover {
+    background-color: #f98a00;
+}
+
+#reset-btn {
+    border: none;
+    outline: none;
+    margin-top: 3%;
+    margin-left: 2%;
+    width: 200px;
+    height: 50px;
+    background-color: #CCCCCC;
+    color: #8c8c8c;
+    font-size: 20px;
+}
+

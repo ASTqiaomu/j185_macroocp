@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>申请退货</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="assets/materialize/css/materialize.min.css" media="screen,projection"/>
+    <!-- Bootstrap Styles-->
+    <link href="assets/css/bootstrap.css" rel="stylesheet"/>
+    <!-- FontAwesome Styles-->
+    <link href="assets/css/font-awesome.css" rel="stylesheet"/>
+    <!-- Morris Chart Styles-->
+    <!-- Custom Styles-->
+    <link href="assets/css/custom-styles.css" rel="stylesheet"/>
+    <link href="assets/css/addtransfer.css" rel="stylesheet">
+    <link href="assets/css/dialog.css" rel="stylesheet">
+
+    <!-- /. WRAPPER  -->
+    <!-- JS Scripts-->
+    <!-- jQuery Js -->
+    <script src="assets/js/jquery-1.10.2.js"></script>
+    <!-- Bootstrap Js -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/materialize/js/materialize.min.js"></script>
+    <!-- Metis Menu Js -->
+    <script src="assets/js/jquery.metisMenu.js"></script>
+    <!-- Morris Chart Js -->
+    <script src="assets/js/morris/raphael-2.1.0.min.js"></script>
+    <script src="assets/js/morris/morris.js"></script>
+    <script src="assets/js/easypiechart.js"></script>
+    <script src="assets/js/easypiechart-data.js"></script>
+    <script src="assets/js/Lightweight-Chart/jquery.chart.js"></script>
+    <!-- Custom Js -->
+    <script src="assets/js/custom-scripts.js"></script>
+    <!--<script src="assets/js/addtransfer.js"></script>-->
+    <script src="assets/js/creatReturnOrder.js"></script>
+    <script src="assets/js/myindex.js"></script>
+</head>
+<body>   <!-- 在加载页面时，自动调用函数 -->
+<div id="light-down"></div>   <!-- 让整个页面变暗 -->
+
+<div id="div-pop-product">   <!-- 点击a标签弹出的div 包含所有产品信息 -->
+    <h3 style="text-align: center; display: block; margin-top: 5%">请选择调拨产品</h3>
+    <a id="close-div" style="float: right; margin-right: 3%; margin-top: -5%" onclick="closeDiv()">
+        <i class="fa fa-times fa-2x"></i>
+    </a>
+    <!-- 所有的产品信息列表 -->
+    <table id="tab-pro" style="overflow: hidden;"></table>
+    <input type="button" id="input-tb" value="确定" onclick="closeDiv(); getAllByProductID()">
+</div>
+
+<div id="wrapper">
+    <nav class="navbar navbar-default top-navbar" role="navigation">
+        <div class="navbar-header">
+            <div class="navbar-brand waves-effect waves-dark">
+                <img id="logo" src="assets/img/logo.png" alt="">
+                <div id="sideNav" href=""><i class="material-icons dp48">toc</i></div>
+            </div>
+        </div>
+        <div id="navInfo">OCP全渠道数字平台</div>
+        <ul class="nav navbar-top-links navbar-right">
+            <li><a class="dropdown-button waves-effect waves-dark" href="#" data-activates="dropdown1">
+                <i class="fa fa-user fa-fw"></i> <b id="login-truename">未登录</b>
+                <i class="material-icons right">arrow_drop_down</i>
+            </a></li>
+        </ul>
+    </nav>
+    <ul id="dropdown1" class="dropdown-content">
+        <li><a onclick="logout()"><i class="fa fa-sign-out fa-fw"></i> 退出</a></li>
+    </ul>
+    <nav class="navbar-default navbar-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="main-menu">
+                <li>
+                    <img id="headPic" src="assets/img/headpic.jpg" alt="">
+                    <div id="showInfo">
+                        <p class="username" id="login_truename">未登录</p>
+                        <p class="rName" id="login_rName">未登录</p>
+                    </div>
+                </li>
+                <li>
+                    <a href="index.html" class="waves-effect waves-dark"><i class="fa fa-dashboard"></i>首页</a>
+                </li>
+                <li>
+                    <a href="#" class="waves-effect waves-dark"><i class="fa fa-sitemap"></i>运营管理<span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="Management_OA.html"><i class="fa fa-user" aria-hidden="true"></i>运营账号管理</a>
+                        </li>
+                        <li>
+                            <a href="Management_OR.html"><i class="fa fa-users" aria-hidden="true"></i>运营角色管理</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="waves-effect waves-dark"><i class="fa fa-file"></i>退货订单管理<span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse in" aria-expanded="true">
+                        <li>
+                            <a href="addReturnOrder.html" class="active-menu"><i class="fa fa-plus" aria-hidden="true"></i>退货申请</a>
+                        </li>
+                        <li>
+                            <a href="agencyReturnOrderList.html"><i class="fa fa-bars" aria-hidden="true"></i>查看退货订单</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="waves-effect waves-dark"><i class="fa fa-fw fa-table"></i>库存管理<span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="addtransfer.html"><i class="fa fa-plus" aria-hidden="true"></i>制定调拨单</a>
+                        </li>
+                        <li>
+                            <a href="transferlist.html"><i class="fa fa-bars" aria-hidden="true"></i>调拨单列表</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="waves-effect waves-dark"><i class="fa fa-fw fa-gear"></i>系统配置<span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="#">日志<span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                                <li><a href="#">修改说明</a></li>
+                                <li><a href="#">查看日志</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- /. NAV SIDE  -->
+    <div id="page-wrapper">
+        <div class="header">
+            <h1 class="page-header">申请退货</h1>
+            <ol class="breadcrumb">
+                <li><a href="#">我的待办</a></li>
+                <li><a href="#">快捷功能</a></li>
+                <li><a href="#">常用信息平台</a></li>
+                <li class="active">公告</li>
+            </ol>
+        </div>
+        <div id="page-inner" style="background-color: white">
+            <!-- 退货单 -->
+            <div id="returnOrder">
+                <h3 id="organization" style="text-align: center; display: block;">退货申请表</h3>
+                <div id="transferinfo-div">   <!-- 列表信息 -->
+                    <form id="transferinfo-form" method="post">
+                        <div class="div-in-form" style="height: 50px">
+                            <span class="transfer-list-span first-list">客户名称：</span>   <!-- 自动生成 -->
+                            <span id="agencyName">郎特姆公司</span>
+                        </div>
+                        <div class="div-in-form" style="height: 50px">
+                            <span class="transfer-list-span first-list">客户编码：</span>   <!-- 自动生成 -->
+                            <span id="agencyNumber">1009996789</span>
+                        </div>
+                        <div class="div-in-form" style="height: 50px">
+                            <span class="transfer-list-span other-list">区域：</span>
+                            <span id="agencyArea">大中华区</span>
+                        </div>
+                        <div class="div-in-form" style="height: 50px">
+                            <span class="transfer-list-span other-list">原销售订单号：</span>
+                            <select id="orderNumber" style="display: inline; width: 120px; height: 27px;"
+                                    onclick="show();getAllSaleOrderByAgencyName()">
+                            </select>
+                        </div>
+                        <div class="div-in-form" style="height: 50px">
+                            <span class="transfer-list-span other-list">退货方式：</span>
+                            <select id="returnType" style="display: inline; width: 100px; height: 27px;">
+                                <option>客户发货</option>
+                            </select>
+                        </div>
+                        <br>
+                        <div class="div-in-form" style="height: 50px">
+                            <span class="transfer-list-span first-list">快递单号：</span>
+                            <!-- 以下拉列表方式选择 -->
+                            <select id="expressCompany" style="display: inline; width: 60px; height: 27px;">
+                                <option>顺丰</option>
+                                <option>中通</option>
+                                <option>圆通</option>
+                                <option>韵达</option>
+                                <option>京东</option>
+                                <option>优速</option>
+                            </select>
+                            <input id="expressNum" style="display: inline; width: 160px; height: 27px;" maxlength="15">
+                        </div>
+                        <div class="div-in-form" style="height: 50px">
+                            <span class="transfer-list-span other-list">原发货仓库名称：</span>
+                            <!-- 以下拉列表方式选择 -->
+                            <select id="oWarehouseName" style="display: inline; width: 120px; height: 27px;">
+                                <option>北京终端仓</option>
+                                <option>成都终端仓</option>
+                                <option>成都双流展柜仓</option>
+                                <option>南京终端仓</option>
+                            </select>
+                        </div>
+                        <div class="div-in-form" style="height: 50px">
+                            <span class="transfer-list-span other-list">退回仓库：</span>
+                            <!-- 以下拉列表方式选择 -->
+                            <select id="returnedWarehouseName" style="display: inline; width: 120px; height: 27px;">
+                                <option>北京终端仓</option>
+                                <option>成都终端仓</option>
+                                <option>成都双流展柜仓</option>
+                                <option>南京终端仓</option>
+                            </select>
+                        </div>
+                        <div class="div-in-form" style="height: 50px">
+                            <span class="transfer-list-span other-list">客户备注：</span>
+                            <input id="agencyMark" style="display: inline; width: 160px; height: 27px;">
+                        </div>
+                        <div class="div-in-form" style="height: 50px">
+                            <span class="transfer-list-span other-list">退款原因：</span>
+                            <input id="returnReason" style="display: inline; width: 160px; height: 27px;">
+                        </div>
+                        <div class="div-in-form" style="height: 50px">
+                            <span class="transfer-list-span first-list">会员名称：</span>   <!-- 自动生成 -->
+                            <span id="memberName"></span>
+                        </div>
+                        <div class="div-in-form" style="height: 50px">
+                            <span class="transfer-list-span first-list">收货人：</span>   <!-- 自动生成 -->
+                            <span id="receiverName"></span>
+                        </div>
+                        <div class="div-in-form" style="height: 50px">
+                            <span class="transfer-list-span first-list">联系电话：</span>   <!-- 自动生成 -->
+                            <span id="receiverMobile"></span>
+                        </div>
+                        <div class=" div-in-form" style="height: 50px">
+                            <span class="transfer-list-span first-list">省份：</span>   <!-- 自动生成 -->
+                            <span id="receiverProvince"></span>
+                        </div>
+                        <div class="div-in-form" style="height: 50px">
+                            <span class="transfer-list-span first-list">地市：</span>   <!-- 自动生成 -->
+                            <span id="receiverCity"></span>
+                        </div>
+                        <div class="div-in-form" style="height: 50px">
+                            <span class="transfer-list-span first-list">区/县：</span>   <!-- 自动生成 -->
+                            <span id="receiverArea"></span>
+                        </div>
+                        <div class="div-in-form" style="height: 50px">
+                            <span class="transfer-list-span first-list">街道地址：</span>   <!-- 自动生成 -->
+                            <span id="receiverStreet"></span>
+                        </div>
+                        <br>
+
+                        <table id="tab-on-html">
+                            <tr style="background-color: #f2f2f2" id="tableHead">
+                                <th>序号</th>
+                                <th>原销售订单号</th>
+                                <th>原销售来源单号</th>
+                                <th>产品编码</th>
+                                <th>产品名称</th>
+                                <th>数量（件）</th>
+                                <th>可退数量（件）</th>
+                                <th>开票价（元）</th>
+                                <th>退货金额（元）</th>
+                                <th>操作</th>
+                            </tr>
+                            <tr>
+                                <td id="serialNum">1</td>
+                                <td id="oSaleNum"></td>
+                                <td id="oSaleSourceNum"></td>
+                                <td id="productNum"></td>
+                                <td id="productName"></td>
+                                <td id="amount"></td>
+                                <td id="returnAmount">
+                                    <input type="number" style="width: 50px;">
+                                </td>
+                                <td id="price"></td>
+                                <td id="refund"></td>
+                                <td id="operation" style="color: red;" onclick="deleteProduct()"><a>删除</a></td>
+                            </tr>
+                        </table>
+
+                        <!-- 两个按钮 -->
+                        <input type="button" id="confirm-btn" value="提交" onclick="submitreturnOrder()">
+                        <input type="reset" id="reset-btn" value="重置">
+                    </form>
+                </div>
+            </div>
+
+            <footer><p style="text-align: center; margin-top: 5%;">Copyright &copy; 2020.Company name All rights
+                reserved.</p></footer>
+        </div>
+        <!-- /. PAGE INNER  -->
+    </div>
+    <!-- /. PAGE WRAPPER  -->
+    <!--弹窗部分-->
+    <div class="dialog">
+        <!-- 弹窗内容 -->
+        <div class="content">
+            <div class="aclose">
+                <span>选择退货订单</span>
+                <a class="close" href="javascript:close();">&times;</a>
+            </div>
+            <div class="contain">
+                <!--弹窗具体内容-->
+                <div class="div-in-form" style="height: 50px; display: inline;">
+                    <span class="transfer-list-span other-list">产品编码：</span>
+                    <input id="queryProductNum" style="display: inline; width: 160px; height: 27px;">
+                </div>
+                <div class="div-in-form" style="height: 50px; display: inline;">
+                    <span class="transfer-list-span other-list">产品名称：</span>
+                    <input id="queryProductName" style="display: inline; width: 160px; height: 27px;">
+                </div>
+                <div class="div-in-form" style="height: 50px; display: inline;">
+                    <span class="transfer-list-span other-list">淘宝昵称：</span>
+                    <input id="queryNickname" style="display: inline; width: 160px; height: 27px;">
+                </div>
+                <div class="div-in-form" style="height: 50px; display: inline;">
+                    <button onclick="multiQuery()">查询</button>
+                </div>
+                <table id="dialog-on-html">
+                    <tr style="background-color: #f2f2f2">
+                        <th></th>
+                        <th>原销售订单号</th>
+                        <th>原销售来源单号</th>
+                        <th>淘宝买家昵称</th>
+                        <th>产品编码</th>
+                        <th>产品名称</th>
+                        <th>数量（件）</th>
+                        <th>开票价（元）</th>
+                        <th>操作</th>
+                    </tr>
+                </table>
+            </div>
+            <div>
+                <a class="close" style="display: block;margin: 0 400px;width: 100px;" href="javascript:close()"
+                   onclick="addOrder()">确认</a>
+            </div>
+        </div>
+
+    </div>
+    <!--订单详情弹窗-->
+    <div class="dialog_2">
+        <!-- 弹窗内容 -->
+        <div class="content">
+            <div class="aclose">
+                <span>订单详情</span>
+                <a class="close" href="javascript:close2();">&times;</a>
+            </div>
+            <div class="contain">
+                <!--弹窗具体内容-->
+                <table class="table table-striped table-bordered table-hover dataTable no-footer"
+                       aria-describedby="dataTables-example_info">
+                    <tr role="row">
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 20%; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                            原销售订单号
+                        </th>
+                        <td id="td_01" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 30%; background: white"></td>
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 20%; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                            原销售订单来源单号
+                        </th>
+                        <td id="td_02" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 30%; background: white"></td>
+                    </tr>
+                    <tr role="row">
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                            销售订单状态
+                        </th>
+                        <td id="td_11" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; background: white"></td>
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                            淘宝昵称
+                        </th>
+                        <td id="td_12" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; background: white"></td>
+                    </tr>
+                    <tr role="row">
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                            原发货仓库名称
+                        </th>
+                        <td id="td_21" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; background: white"></td>
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                            快递公司
+                        </th>
+                        <td id="td_22" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; background: white"></td>
+                    </tr>
+                    <tr role="row">
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                            快递单号
+                        </th>
+                        <td id="td_31" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; background: white"></td>
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                            经销商账号
+                        </th>
+                        <td id="td_32" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; background: white"></td>
+                    </tr>
+                    <tr role="row">
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">收货人
+                        </th>
+                        <td id="td_41" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; background: white"></td>
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                            手机号码
+                        </th>
+                        <td id="td_42" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; background: white"></td>
+                    </tr>
+                    <tr role="row">
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                            省份
+                        </th>
+                        <td id="td_51" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; background: white"></td>
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                            地市
+                        </th>
+                        <td id="td_52" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; background: white"></td>
+                    </tr>
+                    <tr role="row">
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">县/区
+                        </th>
+                        <td id="td_61" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; background: white"></td>
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                            邮编
+                        </th>
+                        <td id="td_62" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; background: white"></td>
+                    </tr>
+                    <tr role="row">
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+                            街道地址
+                        </th>
+                        <td id="td_71" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; background: white"></td>
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; text-align: right; background: #f9f9f9; border: 1px solid #ddd">
+
+                        </th>
+                        <td id="td_72" tabindex="0" rowspan="1" colspan="1"
+                            style="width: 100px; background: white"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+</body>
+</html>

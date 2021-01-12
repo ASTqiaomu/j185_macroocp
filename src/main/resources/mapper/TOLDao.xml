@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="demo.macroocp.dao.TransferOrderListDao">
+    <!--动态查询信息-->
+    <resultMap id="transferListMap" type="demo.macroocp.bean.TransferOrderList">
+        <result property="tsID" column="tsID"/>
+        <result property="createDate" column="createDate"/>
+        <result property="tsType" column="tsType"/>
+        <result property="calloutwID" column="calloutwID"/>
+        <result property="wnameOut" column="wnameOut"/>
+        <result property="callinwID" column="callinwID"/>
+        <result property="wnameIn" column="wnameIn"/>
+        <result property="productID" column="productID"/>
+        <result property="productName" column="productName"/>
+        <result property="type" column="type"/>
+        <result property="tsVolumeDose" column="tsVolumeDose"/>
+        <result property="unit" column="unit"/>
+        <result property="tsTotalVolume" column="tsTotalVolume"/>
+        <result property="price" column="price"/>
+
+        <!---->
+        <result property="trueName" column="trueName"/>
+        <result property="agencyID" column="agencyID"/>
+        <result property="consignee" column="consignee"/>
+        <result property="deliverAd" column="deliverAd"/>
+        <result property="remark" column="remark"/>
+        <result property="wOrganizationOut" column="wOrganizationOut"/>
+        <result property="wOrganizationIn" column="wOrganizationIn"/>
+        <result property="transMode" column="transMode"/>
+        <result property="agencyName" column="agencyName"/>
+        <result property="consigneeTel" column="consigneeTel"/>
+        <result property="consigneeID" column="consigneeID"/>
+        <result property="organization" column="organization"/>
+
+        <!---->
+        <result property="stockOrderID" column="stockOrderID"/>
+        <result property="repertory" column="repertory"/>
+        <result property="callinWInventory" column="callinWInventory"/>
+        <result property="checkQuantity" column="checkQuantity"/>
+        <result property="actualShipments" column="actualShipments"/>
+        <result property="signedQuantity" column="signedQuantity"/>
+        <result property="tsQuantity" column="tsQuantity"/>
+        <result property="unitVolume" column="unitVolume"/>
+    </resultMap>
+    <!--调拨单列表，显示调拨单和相关产品信息-->
+    <select id="selectTransferOrderList" parameterType="transferorderlist" resultMap="transferListMap">
+        select
+        t.tsID,                 <!--01_调拨单号_主键-->
+        t.createDate,           <!--11_创建日期-->
+        t.tsType,               <!--02_调拨类型-->
+        t.calloutwID,           <!--04_调出仓库编号_外键-->
+        w1.wName wnameOut,               <!-- 03_仓库名称_唯一-->
+        t.callinwID,            <!-- 05_调入仓库编号_外键-->
+        w2.wName wnameIn,               <!-- 03_仓库名称_唯一-->
+        p.productID,            <!-- 12_产品编码_外键-->
+        p.productName,          <!-- 03_产品名称-->
+        p.type,                 <!-- 04_品类-->
+        t.tsVolumeDose,         <!-- 09_调拨总量-->
+        p.unit,                 <!-- 10_单位-->
+        t.tsTotalVolume,        <!-- 10_调拨总体积-->
+        p.price                 <!-- 13 产品单价-->
+        from
+        transferinfot t
+        left join productinfot p on t.productID = p.productID
+        join oat o on o.userName =t.creator
+        join warehouseinfot w1 on w1.wID = t.calloutwID
+        join warehouseinfot w2 on w2.wID = t.callinwID
+        <where>
+            <!-- 根据调拨单号查询-->
+            <if test="tsID != null and tsID != '' and tsID != 'null'">
+                and tsID=#{tsID}
+            </if>
+
+            <!-- 根据产品编码查询-->
+            <if test="productID != null and productID != '' and productID != 'null'">
+                and p.productID=#{productID}
+            </if>
+
+            <!-- 根据产品名字查询-->
+            <if test="productName != null and productName != '' and productName != 'null'">
+                and productName like concat('%', #{productName}, '%')
+            </if>
+
+            <!-- 根据调拨日期查询-->
+            <if test="startDate != null">
+                AND date_format(createDate,'%y%m%d%h%m%s') >= date_format(#{startDate},'%y%m%d%h%m%s')
+            </if>
+            <if test="endDate != null">
+                AND date_format(#{endDate},'%y%m%d%h%m%s') >= date_format(createDate,'%y%m%d%h%m%s')
+            </if>
+
+            <!--根据调出仓库查询-->
+            <if test="wnameOut != null and wnameOut != '' and wnameOut != 'null'">
+                and w1.wName=#{wnameOut}
+            </if>
+
+            <!--根据调入仓库查询-->
+            <if test="wnameIn != null and wnameIn != '' and wnameIn != 'null'">
+                and w2.wName=#{wnameIn}
+            </if>
+
+            <!-- 根据品类查询-->
+            <if test="type != null and type != '' and type != 'null'">
+                and type like concat('%', #{type}, '%')
+            </if>
+
+            <!-- 根据创建人查询-->
+            <if test="trueName != null and true != '' and trueName != 'null'">
+                and trueName=#{trueName}
+            </if>
+            <!-- 根据调拨类型查询-->
+            <if test="tsType != null and tsType != '' and tsType != 'null'">
+                and tsType=#{tsType}
+            </if>
+        </where>
+        order by type desc
+    </select>
+
+    <!--查看调拨单列表详情，订单信息：展示创建人、经销商、仓库、调拨单等相关信息-->
+    <select id="selectOrderInformationByTsID" parameterType="transferorderlist"
+            resultMap="transferListMap">
+        select
+        t.createDate,                <!--调拨单生成日期-->
+        <!--调出机构编码-->
+        w1.wOrganization wOrganizationOut,            <!--调出机构名称-->
+        t.calloutwID,                <!--调出仓库编码-->
+        w1.wName wnameOut,                    <!--调出仓库名称-->
+        o.trueName,                  <!--创建人-->
+        t.agencyID,                  <!--经销商编码-->
+        a.consignee,                 <!--收货人-->
+        a.deliverAd,                 <!--收货地址-->
+        t.tsVolumeDose,              <!--调拨总数量-->
+        t.remark,                    <!--备注 -->
+
+        t.tsID,                      <!--调拨单号-->
+        <!--调入机构编码-->
+        w2.wOrganization wOrganizationIn,            <!--调入机构名称-->
+        t.callinwID,                 <!--调入仓库编码 -->
+        w2.wName wnameIn,                    <!--调入仓库名称-->
+        t.transMode,                 <!--发运方式-->
+        a.agencyName,                <!--经销商名称-->
+        a.consigneeTel,              <!--收货人电话-->
+        a.consigneeID,               <!--收货人身份证-->
+        t.tsTotalVolume,             <!--调拨总体积-->
+        o.organization               <!--产品组织-->
+        <!--经营单位-->
+        from
+        transferinfot t
+        left join agencyinfot a on a.agencyID = t.agencyID
+        join oat o on o.userName = t.creator
+        join warehouseinfot w1 on w1.wID = t.calloutwID
+        join warehouseinfot w2 on w2.wID = t.callinwID
+        where t.tsID = #{tsID}
+    </select>
+
+    <!--查看调拨单列表详情&#45;&#45;产品信息：展示出入仓库、商品等相关信息-->
+    <select id="selectOrderProductListByProductID" parameterType="transferorderlist"
+            resultMap="transferListMap">
+        select
+        p.stockOrderID,            <!--备货计划订单编号-->
+        t.calloutwID,              <!--发出库位编码-->
+        w1.wName wnameOut,                  <!--发出库位名称-->
+        t.callinwID,               <!--接收库位编码-->
+        w2.wName wnameIn,                  <!--接收库位名称-->
+        p.productID,               <!--产品编码-->
+        p.productName,             <!--产品名称-->
+        wr.repertory,              <!--可发货库存-->
+        p.callinWInventory,        <!--调入仓库库存-->
+        p.tsQuantity,              <!--调拨数量-->
+        p.checkQuantity,            <!--审核数量-->
+        p.actualShipments,         <!--实际发货数量-->
+        p.signedQuantity,          <!--已签收数量-->
+        p.unit,                     <!--单位-->
+        p.unitVolume              <!--单位体积-->
+        from
+        transferinfot t
+        left join productinfot p on t.productID = p.productID
+        join warehouseinfot w1 on w1.wID = t.calloutwID
+        join warehouseinfot w2 on w2.wID = t.callinwID
+        join wrepertoryt wr on wr.wID = w2.wID and p.productID = wr.productID     <!--查询出货仓库的库存-->
+        where p.productID = #{productID}
+    </select>
+</mapper>

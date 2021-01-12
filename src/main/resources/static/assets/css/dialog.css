@@ -1,0 +1,94 @@
+.dialog {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.dialog_2 {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.dialog_2 ul {
+    overflow: hidden;
+    background: #EEEEEE;
+}
+
+.dialog_2 ul li {
+    width: 50%;
+    height: 10%;
+    float: left;
+    padding-left: 10px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+.dialog_2 ul li .com {
+    height: inherit;
+}
+
+.content {
+    width: 900px;
+    height: 600px;
+    margin: 100px auto;
+    background-color: #fefefe;
+    border-radius: 10px;
+    box-shadow: 0 0 5px 5px darkgray;
+}
+
+.aclose {
+    width: 900px;
+    height: 60px;
+    text-align: center;
+}
+
+.aclose span {
+    line-height: 70px;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.contain {
+    width: 900px;
+    height: 430px;
+    font-size: 20px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.content table {
+    width: 860px;
+    margin: 0 20px;
+    table-layout: fixed;
+    overflow: scroll;
+}
+
+.content table input[type="checkbox"] {
+    opacity: 1;
+    position: inherit;
+}
+
+.content table tr td {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    margin-right: 15px;
+    font-size: 40px;
+    font-weight: bold;
+    text-decoration: none;
+}
